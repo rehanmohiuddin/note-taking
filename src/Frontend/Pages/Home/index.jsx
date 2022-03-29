@@ -4,15 +4,17 @@ import HomeContainer from "../../Components/HomeContainer";
 import Header from "./Header";
 import KanbanContainer from "./TasksContainer";
 import Editor from "../../Components/Editor";
+import { useTask } from "../../context/Task";
 
-function index() {
+function Index() {
+  const { openTaskModal } = useTask();
   return (
     <HomeContainer>
       <Header />
       <KanbanContainer />
-      <Editor />
+      {openTaskModal && <Editor />}
     </HomeContainer>
   );
 }
 
-export default index;
+export default Index;

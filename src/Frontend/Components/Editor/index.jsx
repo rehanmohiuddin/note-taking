@@ -15,11 +15,16 @@ import Button from "../Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faPencil, faSave } from "@fortawesome/free-solid-svg-icons";
 import RichTextAction from "./RichTextAction";
+import { useTask } from "../../context/Task";
+import { createTask } from "../../services/task";
+import { CREATE_TASK, TASK_MODAL_ACTION } from "../../actions/task";
 
 const TextEditor = () => {
   const initialState = EditorState.createEmpty();
   const [editorState, setEditorState] = React.useState(initialState);
   const [taskState, setTaskState] = useState("CREATE");
+  const { dispatch } = useTask();
+  const [title, setTitle] = useState("");
   const handleSave = () => {
     const data = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
   };
@@ -63,6 +68,15 @@ const TextEditor = () => {
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
   const close = () => {};
+  const _createTask = async () => {
+    console.log("task create");
+    const taskDescription = JSON.stringify(
+      convertToRaw(editorState.getCurrentContent())
+    );
+    const task = { title: title, description: taskDescription };
+    dispatch({ type: CREATE_TASK });
+    dispatch({ ...(await createTask({ task })) });
+  };
   //   console.log({ editorState });
   //   console.log(convertToRaw(editorState.getCurrentContent()).blocks);
   const taskActionMapper = {
@@ -97,7 +111,7 @@ const TextEditor = () => {
       readOnly: false,
       footerBtn: {
         name: "CREATE",
-        action: close,
+        action: _createTask,
         icon: (
           <>
             <FontAwesomeIcon icon={faSave} />
@@ -108,7 +122,9 @@ const TextEditor = () => {
     },
   };
   return (
-    <Modal closeCallBack={() => console.log("close")}>
+    <Modal
+      closeCallBack={() => dispatch({ type: TASK_MODAL_ACTION, data: false })}
+    >
       <div className="section">
         <div className="section-header">
           {taskActionMapper[taskState].headerName}
@@ -117,6 +133,7 @@ const TextEditor = () => {
           <input
             placeholder="Task Title"
             className="task-title"
+            onChange={(e) => setTitle(e.target.value)}
             defaultValue={taskActionMapper[taskState].input.value}
             disabled={taskActionMapper[taskState].input.disabled}
           />
@@ -152,7 +169,7 @@ const TextEditor = () => {
             <Button
               style={"outline"}
               type={"button"}
-              callBack={taskActionMapper[taskState].action}
+              callBack={taskActionMapper[taskState].footerBtn.action}
               data={taskActionMapper[taskState].footerBtn.icon}
             />
           }

@@ -1,7 +1,7 @@
 import { Response } from "miragejs";
 import { requiresAuth } from "../utils/authUtils";
 import { v4 as uuid } from "uuid";
-
+import { getTasks, setTasks } from "../utils/task";
 /**
  * All the routes related to Notes are present here.
  *  These are Privately accessible routes.
@@ -13,17 +13,8 @@ import { v4 as uuid } from "uuid";
  * */
 
 export const getAllNotesHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
-  if (!user) {
-    new Response(
-      404,
-      {},
-      {
-        errors: ["The email you entered is not Registered. Not Found error"],
-      }
-    );
-  }
-  return new Response(200, {}, { notes: user.notes });
+  const tasks = getTasks() ? getTasks() : [];
+  return new Response(200, {}, { tasks: tasks });
 };
 
 /**
@@ -33,25 +24,27 @@ export const getAllNotesHandler = function (schema, request) {
  * */
 
 export const createNoteHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
   try {
-    if (!user) {
-      new Response(
-        404,
-        {},
-        {
-          errors: ["The email you entered is not Registered. Not Found error"],
-        }
-      );
-    }
-    const { note } = JSON.parse(request.requestBody);
-    if (!note.tags) {
-      user.notes.push({ ...note, _id: uuid(), tags: [] });
+    const { task } = JSON.parse(request.requestBody);
+    const tasks = getTasks() ? getTasks() : [];
+    if (!task.tags) {
+      tasks.push({
+        ...task,
+        _id: uuid(),
+        tags: [],
+        created_at: new Date().toISOString(),
+        section: "TODO",
+      });
     } else {
-      user.notes.push({ ...note, _id: uuid() });
+      tasks.push({
+        ...task,
+        _id: uuid(),
+        created_at: new Date().toISOString(),
+        section: "TODO",
+      });
     }
-    this.db.users.update({ _id: user._id }, user);
-    return new Response(201, {}, { notes: user.notes });
+    setTasks(tasks);
+    return new Response(200, {}, { tasks: tasks });
   } catch (error) {
     return new Response(
       500,
@@ -69,21 +62,12 @@ export const createNoteHandler = function (schema, request) {
  * */
 
 export const deleteNoteHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
   try {
-    if (!user) {
-      new Response(
-        404,
-        {},
-        {
-          errors: ["The email you entered is not Registered. Not Found error"],
-        }
-      );
-    }
     const noteId = request.params.noteId;
-    user.notes = user.notes.filter((item) => item._id !== noteId);
-    this.db.users.update({ _id: user._id }, user);
-    return new Response(200, {}, { notes: user.notes });
+    const tasks = getTasks();
+    const _filteredTasks = tasks.filter((item) => item._id !== noteId);
+    setTasks(_filteredTasks);
+    return new Response(200, {}, { tasks: _filteredTasks });
   } catch (error) {
     return new Response(
       500,
@@ -102,23 +86,14 @@ export const deleteNoteHandler = function (schema, request) {
  * */
 
 export const updateNoteHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
   try {
-    if (!user) {
-      new Response(
-        404,
-        {},
-        {
-          errors: ["The email you entered is not Registered. Not Found error"],
-        }
-      );
-    }
-    const { note } = JSON.parse(request.requestBody);
-    const { noteId } = request.params;
-    const noteIndex = user.notes.findIndex((note) => note._id === noteId);
-    user.notes[noteIndex] = { ...user.notes[noteIndex], ...note };
-    this.db.users.update({ _id: user._id }, user);
-    return new Response(201, {}, { notes: user.notes });
+    const { task } = JSON.parse(request.requestBody);
+    const { taskId } = request.params;
+    let tasks = getTasks();
+    const taskIndex = tasks.findIndex((task) => task._id === taskId);
+    tasks[taskIndex] = { ...tasks[taskIndex], ...task };
+    setTasks(tasks);
+    return new Response(200, {}, { tasks: tasks });
   } catch (error) {
     return new Response(
       500,
@@ -137,27 +112,14 @@ export const updateNoteHandler = function (schema, request) {
  * */
 
 export const archiveNoteHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
   try {
-    if (!user) {
-      new Response(
-        404,
-        {},
-        {
-          errors: ["The email you entered is not Registered. Not Found error"],
-        }
-      );
-    }
-    const { noteId } = request.params;
-    const archivedNote = user.notes.filter((note) => note._id === noteId)[0];
-    user.notes = user.notes.filter((note) => note._id !== noteId);
-    user.archives.push({ ...archivedNote });
-    this.db.users.update({ _id: user._id }, user);
-    return new Response(
-      201,
-      {},
-      { archives: user.archives, notes: user.notes }
-    );
+    const { taskId } = request.params;
+    let tasks = getTasks();
+    const archivedNote = tasks.filter((task) => task._id === taskId)[0];
+    tasks = tasks.filter((task) => task._id !== taskId);
+    tasks.push({ ...archivedNote });
+    setTasks(tasks);
+    return new Response(200, {}, { tasks: tasks });
   } catch (error) {
     return new Response(
       500,

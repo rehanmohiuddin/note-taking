@@ -1,10 +1,10 @@
 import React from "react";
 import "./index.css";
 
-function Index() {
+function Index({ title, description }) {
   return (
     <div className="task">
-      <div className="task-header">Task Header</div>
+      <div className="task-header">{title}</div>
       <div className="task-body">
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
