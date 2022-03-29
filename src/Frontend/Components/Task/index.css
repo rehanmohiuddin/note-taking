@@ -1,0 +1,21 @@
+.task {
+  background-color: var(--white);
+  padding: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.task-header {
+  text-align: left;
+  padding-bottom: 1rem;
+}
+.task-body {
+  padding-bottom: 1rem;
+  text-align: left;
+  max-height: 20vh;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

@@ -1,0 +1,18 @@
+.kanban {
+  background-color: var(--light-white);
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-height: 100vh;
+}
+
+.kanban-header {
+  border-bottom: 1px solid var(--gray);
+  text-align: left;
+  padding: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.kanban-body {
+  padding: 1rem;
+}
