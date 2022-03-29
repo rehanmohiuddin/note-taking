@@ -1,0 +1,12 @@
+:root {
+  --teal: #54bab9;
+  --beige: #e9dac1;
+  --cream: #f7ecde;
+  --light-white: #fbf8f1;
+  --white: #fff;
+  --black: #000;
+  --gray: rgb(0 0 0 / 16%);
+}
+.kash-container {
+  padding: 0;
+}
