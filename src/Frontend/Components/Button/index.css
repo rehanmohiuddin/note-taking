@@ -1,0 +1,27 @@
+.btn-primary,
+.btn-outline {
+  background-color: var(--teal);
+  outline: none;
+  border: none;
+  display: flex;
+  padding: 0.7rem;
+  white-space: nowrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.2rem;
+  color: var(--white);
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  gap: 0.3rem;
+}
+.btn-outline {
+  background-color: var(--white);
+  border: 1px solid var(--teal);
+  color: var(--teal);
+}
+
+.btn-primary:hover {
+  box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem var(--gray);
+  transition: box-shadow 500ms;
+}

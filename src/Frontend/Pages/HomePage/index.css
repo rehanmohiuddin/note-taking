@@ -1,0 +1,34 @@
+.home-img {
+  width: 50%;
+  height: 100%;
+}
+.task-home-page {
+  display: flex;
+  flex-direction: row;
+  padding: 2rem;
+  justify-content: center;
+  height: 100%;
+}
+.home-page-main {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+}
+.btn-join {
+  padding: 1rem;
+  background-color: var(--teal);
+}
+.btn-sign-up {
+  padding: 1rem;
+  border: 1px solid var(--teal);
+}
+.nav-bar {
+  padding: 1rem;
+}
+.get-started {
+  color: var(--teal);
+  font-size: 1.3rem;
+  text-decoration: none;
+}
