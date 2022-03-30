@@ -78,11 +78,8 @@ const archiveTask = async (payload) => {
 
 const updateTask = async (payload) => {
   try {
-    const resp = await AxiosInstance.post("/tasks/", payload, {
-      params: {
-        taskId: payload.taskId,
-      },
-    });
+    const { _id } = payload.task;
+    const resp = await AxiosInstance.post("/tasks/" + _id, payload);
     return resp.status === 200
       ? {
           type: UPDATE_TASK_SUCCESS,

@@ -1,12 +1,3 @@
-const taskState = {
-  tasks: [],
-  archivedTasks: [],
-  openTaskModal: false,
-  editTask: null,
-  error: null,
-  loading: false,
-};
-
 const GET_TASKS = "GET_TASKS";
 const GET_TASKS_SUCCESS = "GET_TASKS_SUCCESS";
 const GET_TASKS_FAILURE = "GET_TASKS_FAILURE";
@@ -21,6 +12,22 @@ const UPDATE_TASK = "UPDATE_TASK";
 const UPDATE_TASK_SUCCESS = "UPDATE_TASK_SUCCESS";
 const UPDATE_TASK_FAILURE = "UPDATE_TASK_FAILURE";
 const TASK_MODAL_ACTION = "TASK_MODAL_ACTION";
+const TODO = "TODO";
+const IN_PROGRESS = "IN_PROGRESS";
+const COMPLETED = "COMPLETED";
+const GET_TASK_DETAIL = "GET_TASK_DETAIL";
+
+const taskState = {
+  tasks: [],
+  kanban: { TODO: [], IN_PROGRESS: [], COMPLETED: [] },
+  archivedTasks: [],
+  openTaskModal: false,
+  editTask: null,
+  error: null,
+  loading: false,
+  taskDetail: null,
+};
+const kanbanInitial = { TODO: [], IN_PROGRESS: [], COMPLETED: [] };
 
 export {
   taskState,
@@ -38,4 +45,9 @@ export {
   UPDATE_TASK_FAILURE,
   UPDATE_TASK_SUCCESS,
   TASK_MODAL_ACTION,
+  TODO,
+  IN_PROGRESS,
+  COMPLETED,
+  GET_TASK_DETAIL,
+  kanbanInitial,
 };
