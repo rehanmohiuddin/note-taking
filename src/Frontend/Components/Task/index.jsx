@@ -1,14 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./index.css";
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-  AtomicBlockUtils,
-  DraftEditorCommand,
-  convertToRaw,
-  convertFromRaw,
-} from "draft-js";
+import { Editor, EditorState, convertFromRaw } from "draft-js";
 import { useTask } from "../../context/Task";
 import {
   GET_TASK_DETAIL,
@@ -16,10 +8,14 @@ import {
   PRIORITY_LOW,
   PRIORITY_MEDIUM,
 } from "../../actions/task";
+import ContextMenu from "../ContextMenu";
+import { archiveTask, deleteTask, unArchiveTask } from "../../services/task";
 
 function Index(task) {
-  const { title, description, created_at, deadline, priority } = task.task;
+  const { title, description, created_at, deadline, priority, isArchived } =
+    task.task;
   const { dispatch } = useTask();
+  const ref = useRef();
 
   const handleOpenTask = () =>
     dispatch({ type: GET_TASK_DETAIL, data: task.task });
@@ -30,9 +26,25 @@ function Index(task) {
     [PRIORITY_LOW]: { style: "low", name: "LOW" },
   };
 
+  const taskOptions = [
+    {
+      name: isArchived ? "Un Archive" : "Archive",
+      action: async () =>
+        dispatch({
+          ...(isArchived ? await unArchiveTask(task) : await archiveTask(task)),
+        }),
+    },
+    {
+      name: "Delete",
+      action: async () => dispatch({ ...(await deleteTask(task)) }),
+    },
+  ];
+  console.log("REFF", ref);
   return (
-    <div onClick={handleOpenTask} className="task">
-      <div className="task-header">{title}</div>
+    <div ref={ref} className="task">
+      <div onClick={handleOpenTask} className="task-header">
+        {title}
+      </div>
       <div className="task-body">
         <Editor
           editorState={EditorState.createWithContent(
@@ -49,6 +61,13 @@ function Index(task) {
           {getPriority[priority].name}
         </div>
       </div>
+      <ContextMenu ref={ref.current}>
+        {taskOptions.map((_task) => (
+          <div key={_task.name} onClick={_task.action}>
+            {_task.name}
+          </div>
+        ))}
+      </ContextMenu>
     </div>
   );
 }

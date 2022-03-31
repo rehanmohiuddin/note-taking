@@ -1,5 +1,6 @@
 import { Response } from "miragejs";
 import { requiresAuth } from "../utils/authUtils";
+import { getTasks, setTasks } from "../utils/task";
 
 /**
  * All the routes related to Archives are present here.
@@ -12,17 +13,11 @@ import { requiresAuth } from "../utils/authUtils";
  * */
 
 export const getAllArchivedNotesHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
-  if (!user) {
-    new Response(
-      404,
-      {},
-      {
-        errors: ["The email you entered is not Registered. Not Found error"],
-      }
-    );
-  }
-  return new Response(200, {}, { archives: user.archives });
+  return new Response(
+    200,
+    {},
+    { tasks: getTasks().filter((_task) => _task.isArchived) }
+  );
 };
 
 /**
@@ -53,20 +48,14 @@ export const deleteFromArchivesHandler = function (schema, request) {
  * */
 
 export const restoreFromArchivesHandler = function (schema, request) {
-  const user = requiresAuth.call(this, request);
-  if (!user) {
-    new Response(
-      404,
-      {},
-      {
-        errors: ["The email you entered is not Registered. Not Found error"],
-      }
-    );
-  }
-  const { noteId } = request.params;
-  const restoredNote = user.archives.filter((note) => note._id === noteId)[0];
-  user.archives = user.archives.filter((note) => note._id !== noteId);
-  user.notes.push({ ...restoredNote });
-  this.db.users.update({ _id: user._id }, user);
-  return new Response(200, {}, { archives: user.archives, notes: user.notes });
+  const { taskId } = request.params;
+  let tasks = getTasks();
+  const restoredNoteIndex = tasks.findIndex((task) => task._id === taskId);
+  tasks[restoredNoteIndex] = { ...tasks[restoredNoteIndex], isArchived: false };
+  setTasks(tasks);
+  return new Response(
+    200,
+    {},
+    { tasks: [...tasks.filter((_task) => _task.isArchived)] }
+  );
 };

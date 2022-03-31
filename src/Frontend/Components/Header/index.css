@@ -36,4 +36,6 @@ input:focus {
   font-size: 1rem;
   white-space: nowrap;
   padding: 0.4rem;
+  color: var(--teal);
+  cursor: pointer;
 }

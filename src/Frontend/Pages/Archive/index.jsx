@@ -1,12 +1,15 @@
-import React from "react";
-import "./index.css";
+import React, { useEffect } from "react";
 import HomeContainer from "../../Components/HomeContainer";
-import KanbanContainer from "./TasksContainer";
+import KanbanContainer from "../Home/TasksContainer";
 import Editor from "../../Components/Editor";
 import { useTask } from "../../context/Task";
+import { getArchivedTasks } from "../../services/task";
 
 function Index() {
-  const { openTaskModal } = useTask();
+  const { openTaskModal, dispatch } = useTask();
+
+  useEffect(async () => dispatch({ ...(await getArchivedTasks()) }), []);
+
   return (
     <HomeContainer>
       <KanbanContainer />

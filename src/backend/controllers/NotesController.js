@@ -14,7 +14,11 @@ import { getTasks, setTasks } from "../utils/task";
 
 export const getAllNotesHandler = function (schema, request) {
   const tasks = getTasks() ? getTasks() : [];
-  return new Response(200, {}, { tasks: tasks });
+  return new Response(
+    200,
+    {},
+    { tasks: tasks.filter((_task) => !_task.isArchived) }
+  );
 };
 
 /**
@@ -33,6 +37,7 @@ export const createNoteHandler = function (schema, request) {
       _id: uuid(),
       created_at: new Date().toISOString(),
       section: "TODO",
+      isArchived: false,
     };
     if (!task.tags) {
       tasks.push({
@@ -63,11 +68,11 @@ export const createNoteHandler = function (schema, request) {
 
 export const deleteNoteHandler = function (schema, request) {
   try {
-    const noteId = request.params.noteId;
+    const taskId = request.params.taskId;
     const tasks = getTasks();
-    const _filteredTasks = tasks.filter((item) => item._id !== noteId);
+    const _filteredTasks = tasks.filter((item) => item._id !== taskId);
     setTasks(_filteredTasks);
-    return new Response(200, {}, { tasks: _filteredTasks });
+    return new Response(200, {}, { task: { _id: taskId } });
   } catch (error) {
     return new Response(
       500,
@@ -112,15 +117,37 @@ export const updateNoteHandler = function (schema, request) {
  * body contains {note}
  * */
 
+export const getTags = function (schema, request) {
+  try {
+    let tasks = getTasks();
+    const tagsReducer = (taskTags, task) => [...taskTags, ...task.tags];
+    const tags = tasks.reduce(tagsReducer, []);
+    return new Response(200, {}, { tags: [...tags] });
+  } catch (error) {
+    return new Response(
+      500,
+      {},
+      {
+        error,
+      }
+    );
+  }
+};
+
 export const archiveNoteHandler = function (schema, request) {
   try {
+    const { task } = JSON.parse(request.requestBody);
     const { taskId } = request.params;
+    console.log({ task, taskId });
     let tasks = getTasks();
-    const archivedNote = tasks.filter((task) => task._id === taskId)[0];
-    tasks = tasks.filter((task) => task._id !== taskId);
-    tasks.push({ ...archivedNote });
+    const taskIndex = tasks.findIndex((task) => task._id === taskId);
+    tasks[taskIndex] = { ...tasks[taskIndex], ...task, isArchived: true };
     setTasks(tasks);
-    return new Response(200, {}, { tasks: tasks });
+    return new Response(
+      200,
+      {},
+      { tasks: tasks.filter((_task) => _task.isArchived) }
+    );
   } catch (error) {
     return new Response(
       500,

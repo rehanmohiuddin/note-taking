@@ -28,6 +28,9 @@
   height: 25vh;
   overflow-y: scroll;
 }
+.public-DraftEditorPlaceholder-root {
+  width: fit-content;
+}
 .section-header {
   padding: 0.7rem;
   text-align: left;

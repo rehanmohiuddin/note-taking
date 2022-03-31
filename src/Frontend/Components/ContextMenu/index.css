@@ -1,0 +1,13 @@
+.context-menu-container {
+  background-color: var(--white);
+  box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem var(--gray);
+  padding: calc(1 * var(--spacing-unit));
+  position: absolute;
+  color: var(--black);
+  z-index: 1000;
+}
+.context-menu-container > div {
+  color: var(--teal);
+  text-align: left;
+  padding: calc(0.5 * var(--spacing-unit));
+}

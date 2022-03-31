@@ -24,7 +24,9 @@ function Tag({ tags, setTags, tagState }) {
           />
         </div>
       ))}
-      {tagState.enabled && <input onKeyDown={handleTag} />}
+      {tagState.enabled && (
+        <input placeholder="Enter Tags" onKeyDown={handleTag} />
+      )}
     </div>
   );
 }

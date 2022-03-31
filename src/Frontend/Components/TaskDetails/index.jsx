@@ -55,8 +55,6 @@ const Index = () => {
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
   const close = () => {};
-  //   console.log({ editorState });
-  //   console.log(convertToRaw(editorState.getCurrentContent()).blocks);
   return (
     <Modal closeCallBack={() => console.log("close")}>
       <div className="section">

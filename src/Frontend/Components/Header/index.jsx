@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
-import Button from "../../../Components/Button";
+import Button from "../Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faPlus, faSort } from "@fortawesome/free-solid-svg-icons";
-import { useTask } from "../../../context/Task";
+import { useTask } from "../../context/Task";
 import {
   FARTHEST_DEADLINE,
   FILTER,
   FILTER_BEFORE_TODAY_DEADLINE,
+  FILTER_BY_TAGS,
   FILTER_THIS_MONTH,
   FILTER_THIS_WEEK,
   FILTER_TODAY_DEADLINE,
@@ -16,13 +17,17 @@ import {
   PRIORITY_LOW_TO_HIGH,
   SORT,
   TASK_MODAL_ACTION,
-} from "../../../actions/task";
-import Filter from "../../../Components/FilterSort";
+} from "../../actions/task";
+import Filter from "../FilterSort";
+import { getTags, getTasks } from "../../services/task";
 
 function Index() {
-  const { dispatch } = useTask();
+  const { dispatch, selectedFilter, tags } = useTask();
   const [openFilter, setFilter] = useState(null);
   const [openSort, setSort] = useState(null);
+  const [openTags, setTags] = useState(null);
+
+  useEffect(async () => dispatch({ ...(await getTags()) }), []);
 
   const filterOptions = {
     ["Before Today Deadline"]: () =>
@@ -43,6 +48,8 @@ function Index() {
     ["Farthest Deadline"]: () =>
       dispatch({ type: SORT, data: FARTHEST_DEADLINE }),
   };
+
+  const handleClearFilter = async () => dispatch({ ...(await getTasks()) });
 
   return (
     <header className="home-header">
@@ -91,6 +98,27 @@ function Index() {
             </Filter>
           )}
         </div>
+        <div onClick={() => setTags(!openTags)} className="filter-sort-icon">
+          <FontAwesomeIcon icon={faSort} />
+          Tags
+          {openTags && (
+            <Filter closeCallBack={() => setTags(null)}>
+              {tags.map((_tag) => (
+                <div
+                  className="task-action-option"
+                  onClick={() => dispatch({ type: FILTER_BY_TAGS, data: _tag })}
+                >
+                  {_tag.name}
+                </div>
+              ))}
+            </Filter>
+          )}
+        </div>
+        {selectedFilter && (
+          <div onClick={handleClearFilter} className="task-action-option">
+            Clear All
+          </div>
+        )}
       </div>
     </header>
   );
