@@ -26,8 +26,39 @@
   overflow: hidden;
   text-align: left;
   padding: 0;
+  height: 50%;
+  max-height: 10vh;
+  margin: 0;
 }
 .task-date {
   text-align: right;
   font-weight: 500;
+}
+
+.priority {
+  padding: calc(0.5 * var(--spacing-unit));
+}
+
+.high {
+  background-color: var(--red);
+  color: var(--white);
+  border-radius: 0.2rem;
+}
+
+.medium {
+  background-color: var(--light-green);
+  color: var(--white);
+  border-radius: 0.2rem;
+}
+
+.low {
+  background-color: var(--yellow);
+  color: var(--black);
+  border-radius: 0.2rem;
+}
+
+.task-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

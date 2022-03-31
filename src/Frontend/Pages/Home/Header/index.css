@@ -19,8 +19,9 @@ input:focus {
 }
 .filter-sort-container {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   align-items: center;
+  position: relative;
 }
 .filter-sort-icon {
   display: flex;
@@ -29,4 +30,10 @@ input:focus {
   font-size: 1.2rem;
   color: var(--teal);
   cursor: pointer;
+}
+
+.task-action-option {
+  font-size: 1rem;
+  white-space: nowrap;
+  padding: 0.4rem;
 }
