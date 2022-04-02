@@ -23,7 +23,6 @@ export function makeServer({ environment = "development" } = {}) {
       application: RestSerializer,
     },
     environment,
-    // TODO: Use Relationships to have named relational Data
     models: {
       user: Model,
       notes: Model,
@@ -43,15 +42,16 @@ export function makeServer({ environment = "development" } = {}) {
     routes() {
       this.namespace = "api";
       // auth routes (public)
+      this.timing = 2000;
       this.post("/auth/signup", signupHandler.bind(this));
       this.post("/auth/login", loginHandler.bind(this));
 
       // notes routes (private)
-      this.get("/notes", getAllNotesHandler.bind(this));
-      this.post("/notes", createNoteHandler.bind(this));
-      this.post("/notes/:noteId", updateNoteHandler.bind(this));
-      this.delete("/notes/:noteId", deleteNoteHandler.bind(this));
-      this.post("/notes/archives/:noteId", archiveNoteHandler.bind(this));
+      this.get("/tasks", getAllNotesHandler.bind(this));
+      this.post("/tasks", createNoteHandler.bind(this));
+      this.post("/tasks/:taskId", updateNoteHandler.bind(this));
+      this.delete("/tasks/:taskId", deleteNoteHandler.bind(this));
+      this.post("/tasks/archives/:taskId", archiveNoteHandler.bind(this));
 
       // archive routes (private)
       this.get("/archives", getAllArchivedNotesHandler.bind(this));
