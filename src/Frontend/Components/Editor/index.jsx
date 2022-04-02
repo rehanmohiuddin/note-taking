@@ -16,18 +16,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faPencil, faSave } from "@fortawesome/free-solid-svg-icons";
 import RichTextAction from "./RichTextAction";
 import { useTask } from "../../context/Task";
-import { createTask } from "../../services/task";
-import { CREATE_TASK, TASK_MODAL_ACTION } from "../../actions/task";
+import { createTask, updateTask } from "../../services/task";
+import {
+  CREATE_TASK,
+  TASK_MODAL_ACTION,
+  TODO,
+  UPDATE_TASK,
+} from "../../actions/task";
+import Tag from "./Tag";
+import Section from "./Section";
 
 const TextEditor = () => {
   const initialState = EditorState.createEmpty();
   const [editorState, setEditorState] = React.useState(initialState);
   const [taskState, setTaskState] = useState("CREATE");
-  const { dispatch } = useTask();
+  const { dispatch, taskDetail } = useTask();
+  const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");
-  const handleSave = () => {
-    const data = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-  };
+  const [progress, setProgress] = useState(TODO);
+
+  useEffect(() => {
+    if (taskDetail) {
+      const { title, description, tags } = taskDetail;
+      setEditorState(
+        EditorState.createWithContent(convertFromRaw(JSON.parse(description)))
+      );
+      setTitle(title);
+      setTags(tags);
+      setProgress(taskDetail.section);
+      setTaskState("EDIT");
+    }
+  }, [taskDetail]);
 
   const handleAddLink = () => {
     const selection = editorState.getSelection();
@@ -67,18 +86,29 @@ const TextEditor = () => {
     e.preventDefault();
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
-  const close = () => {};
-  const _createTask = async () => {
-    console.log("task create");
+  const close = () => dispatch({ type: TASK_MODAL_ACTION, data: false });
+  const _createEditTask = async ({ type, taskService, taskObj }) => {
     const taskDescription = JSON.stringify(
       convertToRaw(editorState.getCurrentContent())
     );
-    const task = { title: title, description: taskDescription };
-    dispatch({ type: CREATE_TASK });
-    dispatch({ ...(await createTask({ task })) });
+    const task = {
+      ...taskObj,
+      title: title,
+      description: taskDescription,
+      tags: tags,
+      section: progress,
+    };
+    dispatch({ type: type });
+    dispatch({ ...(await taskService({ task })) });
   };
-  //   console.log({ editorState });
-  //   console.log(convertToRaw(editorState.getCurrentContent()).blocks);
+
+  const createEditTaskMapper = () =>
+    _createEditTask({
+      type: taskDetail ? UPDATE_TASK : CREATE_TASK,
+      taskService: taskDetail ? updateTask : createTask,
+      taskObj: taskDetail ? taskDetail : {},
+    });
+
   const taskActionMapper = {
     EDIT: {
       showTextActions: false,
@@ -87,15 +117,17 @@ const TextEditor = () => {
       input: {
         disabled: true,
         placeholder: "Task Detail",
-        value: "task title",
+        value: "Task Title",
       },
+      tag: { enabled: false },
+      progress: { enabled: false },
       footerBtn: {
         name: "EDIT",
-        action: close,
+        action: () => setTaskState("CREATE"),
         icon: (
           <>
             <FontAwesomeIcon icon={faPencil} />
-            SAVE
+            EDIT
           </>
         ),
       },
@@ -108,14 +140,25 @@ const TextEditor = () => {
         placeholder: "Task Title",
         value: "",
       },
+      tag: { enabled: true },
+      progress: { enabled: true },
       readOnly: false,
       footerBtn: {
         name: "CREATE",
-        action: _createTask,
+        action: createEditTaskMapper,
         icon: (
           <>
-            <FontAwesomeIcon icon={faSave} />
-            CREATE
+            {taskDetail ? (
+              <>
+                <FontAwesomeIcon icon={faSave} />
+                SAVE
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faPencil} />
+                CREATE
+              </>
+            )}
           </>
         ),
       },
@@ -134,7 +177,7 @@ const TextEditor = () => {
             placeholder="Task Title"
             className="task-title"
             onChange={(e) => setTitle(e.target.value)}
-            defaultValue={taskActionMapper[taskState].input.value}
+            defaultValue={title}
             disabled={taskActionMapper[taskState].input.disabled}
           />
         </div>
@@ -152,6 +195,16 @@ const TextEditor = () => {
             setEditorState(e);
           }}
           handleKeyCommand={handleKeyCommand}
+        />
+        <Tag
+          tags={tags}
+          setTags={setTags}
+          tagState={taskActionMapper[taskState].tag}
+        />
+        <Section
+          progressState={taskActionMapper[taskState].progress}
+          progress={progress}
+          setProgress={setProgress}
         />
         <div className="section-footer">
           <Button

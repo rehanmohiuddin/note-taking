@@ -27,24 +27,24 @@ export const createNoteHandler = function (schema, request) {
   try {
     const { task } = JSON.parse(request.requestBody);
     const tasks = getTasks() ? getTasks() : [];
+    console.log("create", { task });
+    const createdTask = {
+      ...task,
+      _id: uuid(),
+      created_at: new Date().toISOString(),
+      section: "TODO",
+    };
     if (!task.tags) {
       tasks.push({
-        ...task,
-        _id: uuid(),
-        tags: [],
-        created_at: new Date().toISOString(),
-        section: "TODO",
+        ...createdTask,
       });
     } else {
       tasks.push({
-        ...task,
-        _id: uuid(),
-        created_at: new Date().toISOString(),
-        section: "TODO",
+        ...createdTask,
       });
     }
     setTasks(tasks);
-    return new Response(200, {}, { tasks: tasks });
+    return new Response(200, {}, { task: createdTask });
   } catch (error) {
     return new Response(
       500,
@@ -89,11 +89,12 @@ export const updateNoteHandler = function (schema, request) {
   try {
     const { task } = JSON.parse(request.requestBody);
     const { taskId } = request.params;
+    console.log({ task, taskId });
     let tasks = getTasks();
     const taskIndex = tasks.findIndex((task) => task._id === taskId);
     tasks[taskIndex] = { ...tasks[taskIndex], ...task };
     setTasks(tasks);
-    return new Response(200, {}, { tasks: tasks });
+    return new Response(200, {}, { task: tasks[taskIndex] });
   } catch (error) {
     return new Response(
       500,

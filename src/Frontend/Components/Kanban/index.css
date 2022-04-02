@@ -4,6 +4,7 @@
   flex-direction: column;
   height: 80vh;
   max-height: 100vh;
+  min-width: 28vw;
 }
 
 .kanban-header {
@@ -15,4 +16,8 @@
 }
 .kanban-body {
   padding: 1rem;
+  overflow-y: scroll;
+}
+.kanban-body::-webkit-scrollbar {
+  display: none;
 }

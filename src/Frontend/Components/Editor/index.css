@@ -56,3 +56,33 @@
   margin-bottom: 0.7rem;
   width: 90%;
 }
+
+/* input tag */
+
+.tag-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--teal);
+  padding: 0.7rem;
+  margin-top: 0.8rem;
+  gap: 0.5rem;
+}
+.tag-container > input {
+  border: none;
+  outline: none;
+}
+.tag-container > div {
+  background-color: var(--gray);
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.kash-input-select {
+  display: block;
+}
+
+.task-section-container {
+  border: 1px solid var(--teal);
+  margin-top: 0.5rem;
+}
