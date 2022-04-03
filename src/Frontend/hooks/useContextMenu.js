@@ -1,9 +1,10 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 function useContextMenu() {
   const [xPosition, setXPosition] = useState("0px");
   const [yPosition, setYPosition] = useState("0px");
   const [showMenu, setShowMenu] = useState(false);
+  const ref = useRef();
 
   const handleContextMenu = (e) => {
     e.preventDefault();
@@ -16,16 +17,22 @@ function useContextMenu() {
     showMenu && setShowMenu(false);
   }, [showMenu]);
 
+  const closeMenu = () => {
+    document.addEventListener("click", () => setShowMenu(null));
+    document.removeEventListener("contextmenu", () => setShowMenu(null));
+  };
+
   useEffect(() => {
-    document.addEventListener("click", handleClick);
-    document.addEventListener("contextmenu", handleContextMenu);
+    if (ref.current) {
+      ref.current.addEventListener("click", handleClick);
+      ref.current.addEventListener("contextmenu", handleContextMenu);
+    }
     return () => {
-      document.addEventListener("click", handleClick);
-      document.removeEventListener("contextmenu", handleContextMenu);
+      closeMenu();
     };
   });
 
-  return { xPosition, yPosition, showMenu };
+  return { xPosition, yPosition, showMenu, ref };
 }
 
 export default useContextMenu;

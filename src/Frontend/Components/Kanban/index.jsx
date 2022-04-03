@@ -7,8 +7,8 @@ function Index({ name, tasks }) {
     <div className="kanban">
       <div className="kanban-header">{name}</div>
       <div className="kanban-body">
-        {tasks.map((_task) => (
-          <Task task={_task} />
+        {tasks.map((_task, index) => (
+          <Task task={_task} index={index} />
         ))}
       </div>
     </div>

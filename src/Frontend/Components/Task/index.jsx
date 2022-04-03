@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./index.css";
 import { Editor, EditorState, convertFromRaw } from "draft-js";
 import { useTask } from "../../context/Task";
@@ -10,12 +10,25 @@ import {
 } from "../../actions/task";
 import ContextMenu from "../ContextMenu";
 import { archiveTask, deleteTask, unArchiveTask } from "../../services/task";
+import useContextMenu from "../../hooks/useContextMenu";
 
-function Index(task) {
-  const { title, description, created_at, deadline, priority, isArchived } =
-    task.task;
+function Index(task, index) {
+  const {
+    title,
+    description,
+    created_at,
+    deadline,
+    priority,
+    isArchived,
+    _id,
+  } = task.task;
   const { dispatch } = useTask();
-  const ref = useRef();
+  const [contextMenuOptions, setContextMenuOptions] = useState({
+    x: null,
+    y: null,
+    show: null,
+  });
+  const { xPosition, yPosition, showMenu, ref } = useContextMenu();
 
   const handleOpenTask = () =>
     dispatch({ type: GET_TASK_DETAIL, data: task.task });
@@ -25,7 +38,6 @@ function Index(task) {
     [PRIORITY_MEDIUM]: { style: "medium", name: "MEDIUM" },
     [PRIORITY_LOW]: { style: "low", name: "LOW" },
   };
-
   const taskOptions = [
     {
       name: isArchived ? "Un Archive" : "Archive",
@@ -39,12 +51,10 @@ function Index(task) {
       action: async () => dispatch({ ...(await deleteTask(task)) }),
     },
   ];
-  console.log("REFF", ref);
+
   return (
-    <div ref={ref} className="task">
-      <div onClick={handleOpenTask} className="task-header">
-        {title}
-      </div>
+    <div onClick={handleOpenTask} ref={ref} className="task">
+      <div className="task-header">{title}</div>
       <div className="task-body">
         <Editor
           editorState={EditorState.createWithContent(
@@ -61,7 +71,8 @@ function Index(task) {
           {getPriority[priority].name}
         </div>
       </div>
-      <ContextMenu ref={ref.current}>
+
+      <ContextMenu x={xPosition} y={yPosition} show={showMenu}>
         {taskOptions.map((_task) => (
           <div key={_task.name} onClick={_task.action}>
             {_task.name}
