@@ -24,3 +24,7 @@
 .nav-buttons > a {
   color: var(--black);
 }
+
+.route-active {
+  color: var(--teal);
+}
