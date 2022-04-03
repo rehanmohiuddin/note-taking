@@ -19,12 +19,15 @@ import { useTask } from "../../context/Task";
 import { createTask, updateTask } from "../../services/task";
 import {
   CREATE_TASK,
+  PRIORITY_LOW,
   TASK_MODAL_ACTION,
   TODO,
   UPDATE_TASK,
 } from "../../actions/task";
 import Tag from "./Tag";
 import Section from "./Section";
+import Deadline from "./Deadline";
+import Priority from "./Priority";
 
 const TextEditor = () => {
   const initialState = EditorState.createEmpty();
@@ -34,6 +37,8 @@ const TextEditor = () => {
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");
   const [progress, setProgress] = useState(TODO);
+  const [deadline, setDeadline] = useState(new Date().toISOString());
+  const [priority, setPriority] = useState(PRIORITY_LOW);
 
   useEffect(() => {
     if (taskDetail) {
@@ -45,6 +50,8 @@ const TextEditor = () => {
       setTags(tags);
       setProgress(taskDetail.section);
       setTaskState("EDIT");
+      setDeadline(taskDetail.deadline);
+      setPriority(taskDetail.priority);
     }
   }, [taskDetail]);
 
@@ -97,6 +104,8 @@ const TextEditor = () => {
       description: taskDescription,
       tags: tags,
       section: progress,
+      deadline: new Date(deadline).toISOString(),
+      priority: priority,
     };
     dispatch({ type: type });
     dispatch({ ...(await taskService({ task })) });
@@ -121,6 +130,7 @@ const TextEditor = () => {
       },
       tag: { enabled: false },
       progress: { enabled: false },
+      priority: { enabled: false },
       footerBtn: {
         name: "EDIT",
         action: () => setTaskState("CREATE"),
@@ -142,6 +152,7 @@ const TextEditor = () => {
       },
       tag: { enabled: true },
       progress: { enabled: true },
+      priority: { enabled: true },
       readOnly: false,
       footerBtn: {
         name: "CREATE",
@@ -201,10 +212,16 @@ const TextEditor = () => {
           setTags={setTags}
           tagState={taskActionMapper[taskState].tag}
         />
+        <Deadline deadline={deadline} setDeadline={setDeadline} />
         <Section
           progressState={taskActionMapper[taskState].progress}
           progress={progress}
           setProgress={setProgress}
+        />
+        <Priority
+          priorityState={taskActionMapper[taskState].priority}
+          priority={priority}
+          setPriority={setPriority}
         />
         <div className="section-footer">
           <Button

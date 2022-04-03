@@ -6,7 +6,14 @@
   --white: #fff;
   --black: #000;
   --gray: rgb(0 0 0 / 16%);
+  --red: #fd5d5d;
+  --yellow: #fff7bc;
+  --light-green: #c0eda6;
+  --spacing-unit: 1rem;
+  --margin: calc(1 * var(--spacing-unit));
+  --padding: calc(1 * var(--spacing-unit));
 }
+
 .kash-container {
   padding: 0;
 }

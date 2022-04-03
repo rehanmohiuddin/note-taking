@@ -1,0 +1,16 @@
+.filter-sort-container-popup {
+  position: absolute;
+  top: 3rem;
+  left: 0;
+  background-color: var(--white);
+  height: 25vh;
+  min-width: 10vw;
+  padding: 1rem;
+  z-index: 1000;
+  border-radius: 0.4rem;
+  box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem var(--gray);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
