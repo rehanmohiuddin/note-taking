@@ -25,3 +25,8 @@
   box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem var(--gray);
   transition: box-shadow 500ms;
 }
+
+.btn-link {
+  text-decoration: none;
+  color: var(--teal);
+}
