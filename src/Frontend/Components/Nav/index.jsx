@@ -17,9 +17,12 @@ function index() {
     <nav className="home-nav-bar">
       <img className="nav-logo" src={Logo} />
       <div className="nav-buttons">
-        <FontAwesomeIcon className="nav-icon" icon={faHome} />
-        <FontAwesomeIcon className="nav-icon" icon={faArchive} />
-        <FontAwesomeIcon className="nav-icon" icon={faTrash} />
+        <Link to={"/tasks"}>
+          <FontAwesomeIcon className="nav-icon" icon={faHome} />
+        </Link>
+        <Link to={"/archive"}>
+          <FontAwesomeIcon className="nav-icon" icon={faArchive} />
+        </Link>
         <FontAwesomeIcon className="nav-icon" icon={faSignOut} />
       </div>
     </nav>

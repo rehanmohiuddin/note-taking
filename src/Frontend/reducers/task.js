@@ -27,6 +27,12 @@ import {
   PRIORITY_LOW,
   PRIORITY_MEDIUM,
   SORT,
+  ARCHIVE_TASK_SUCCESS,
+  GET_ARCHIVE_TASK_SUCCESS,
+  RESTORE_FROM_ARCHIVE_SUCCESS,
+  DELETE_TASK_SUCCESS,
+  GET_TAGS_SUCCESS,
+  FILTER_BY_TAGS,
 } from "../actions/task";
 
 const tasksKanbanReducer = (kanban, task) => ({
@@ -90,11 +96,13 @@ const taskReducer = (state = taskState, action) => {
         ...state,
         loading: true,
       };
+
     case UPDATE_TASK:
       return {
         ...state,
         loading: true,
       };
+
     case UPDATE_TASK_SUCCESS:
       const _taskToBeUpdatedIndex = tasks.findIndex(
         (_task) => _task._id === data.task._id
@@ -104,7 +112,6 @@ const taskReducer = (state = taskState, action) => {
       const _newKanban = _newTasks.reduce(tasksKanbanReducer, {
         ...kanbanInitial,
       });
-      // console.log({ _newKanban, data });
       return {
         ...state,
         tasks: [..._newTasks],
@@ -113,8 +120,9 @@ const taskReducer = (state = taskState, action) => {
         openTaskModal: false,
         taskDetail: null,
       };
+
     case GET_TASKS_SUCCESS:
-      const _kanbanTasks = { ...kanban };
+      const _kanbanTasks = { ...kanbanInitial };
       const _resultKanban = data.tasks.reduce(tasksKanbanReducer, _kanbanTasks);
       return {
         ...state,
@@ -124,17 +132,20 @@ const taskReducer = (state = taskState, action) => {
         openTaskModal: false,
         selectedFilter: null,
       };
+
     case GET_TASKS_FAILURE:
       return {
         ...state,
         error: data,
         loading: false,
       };
+
     case CREATE_TASK:
       return {
         ...state,
         loading: true,
       };
+
     case CREATE_TASK_SUCCESS:
       const newKanban = {
         ...kanban,
@@ -147,24 +158,28 @@ const taskReducer = (state = taskState, action) => {
         loading: false,
         openTaskModal: false,
       };
+
     case CREATE_TASK_FAILURE:
       return {
         ...state,
         error: data,
         loading: false,
       };
+
     case TASK_MODAL_ACTION:
       return {
         ...state,
         openTaskModal: data,
         taskDetail: null,
       };
+
     case GET_TASK_DETAIL:
       return {
         ...state,
         taskDetail: { ...data },
         openTaskModal: true,
       };
+
     case FILTER:
       const _filteredTasks = filterMapper[data]([
         ...kanban[TODO],
@@ -179,6 +194,7 @@ const taskReducer = (state = taskState, action) => {
         kanban: { ...filteredKanBan },
         selectedFilter: data,
       };
+
     case SORT:
       const _sortedTasks = sortMapper[data]([
         ...kanban[TODO],
@@ -192,6 +208,91 @@ const taskReducer = (state = taskState, action) => {
         ...state,
         kanban: { ...sortedKanBan },
         tasks: [..._sortedTasks],
+        selectedFilter: data,
+      };
+
+    case GET_ARCHIVE_TASK_SUCCESS:
+      const _kanbanArchTasks = { ...kanbanInitial };
+      const _resultArchKanban = data.tasks.reduce(
+        tasksKanbanReducer,
+        _kanbanArchTasks
+      );
+      return {
+        ...state,
+        tasks: [...data.tasks],
+        kanban: { ..._resultArchKanban },
+        loading: false,
+        openTaskModal: false,
+        selectedFilter: null,
+      };
+
+    case RESTORE_FROM_ARCHIVE_SUCCESS:
+      const _resultUnArchKanban = data.tasks.reduce(tasksKanbanReducer, {
+        ...kanbanInitial,
+      });
+      return {
+        ...state,
+        tasks: [...data.tasks],
+        kanban: { ..._resultUnArchKanban },
+        loading: false,
+        openTaskModal: false,
+        selectedFilter: null,
+      };
+
+    case ARCHIVE_TASK_SUCCESS:
+      const _kanbanArchiveTasks = { ...kanban };
+      const _resulArchivetKanban = data.tasks.reduce(
+        tasksKanbanReducer,
+        _kanbanArchiveTasks
+      );
+      return {
+        ...state,
+        archivedTasks: [...data.tasks],
+        kanban: { ..._resulArchivetKanban },
+        loading: false,
+        openTaskModal: false,
+        selectedFilter: null,
+      };
+    case DELETE_TASK_SUCCESS:
+      const _tasksAfterDeleted = tasks.filter(
+        (_task) => _task._id !== data.task._id
+      );
+      const _resulDeleteTasksKanban = _tasksAfterDeleted.reduce(
+        tasksKanbanReducer,
+        {
+          ...kanbanInitial,
+        }
+      );
+      return {
+        ...state,
+        archivedTasks: [..._tasksAfterDeleted],
+        kanban: { ..._resulDeleteTasksKanban },
+        loading: false,
+        openTaskModal: false,
+        selectedFilter: null,
+      };
+    case GET_TAGS_SUCCESS:
+      return {
+        ...state,
+        tags: data.tags,
+        loading: false,
+        openTaskModal: false,
+        selectedFilter: null,
+      };
+    case FILTER_BY_TAGS:
+      const tagsReducer = (tasks, task) =>
+        task.tags.find((_tag) => _tag.name === data.name)
+          ? [...tasks, task]
+          : [...tasks];
+
+      const _tagTasks = tasks.reduce(tagsReducer, []);
+
+      const _filteredTagKanban = _tagTasks.reduce(tasksKanbanReducer, {
+        ...kanbanInitial,
+      });
+      return {
+        ...state,
+        kanban: { ..._filteredTagKanban },
         selectedFilter: data,
       };
     default:

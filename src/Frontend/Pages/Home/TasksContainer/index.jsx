@@ -8,11 +8,6 @@ import { getTasks } from "../../../services/task";
 import "./index.css";
 
 function Index() {
-  //   const kanban = [
-  //     { name: "TODO", tasks: [1, 2, 3] },
-  //     { name: "IN PROGRESS", tasks: [1, 2] },
-  //     { name: "COMPLETED", tasks: [1] },
-  //   ];
   const { loading, dispatch, tasks, kanban } = useTask();
   useEffect(async () => {
     dispatch({ type: GET_TASKS });

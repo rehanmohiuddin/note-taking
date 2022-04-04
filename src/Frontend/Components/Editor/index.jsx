@@ -206,6 +206,7 @@ const TextEditor = () => {
             setEditorState(e);
           }}
           handleKeyCommand={handleKeyCommand}
+          placeholder="Task Description"
         />
         <Tag
           tags={tags}

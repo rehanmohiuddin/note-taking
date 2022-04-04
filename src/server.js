@@ -13,6 +13,7 @@ import {
   createNoteHandler,
   deleteNoteHandler,
   getAllNotesHandler,
+  getTags,
   updateNoteHandler,
 } from "./backend/controllers/NotesController";
 import { users } from "./backend/db/users";
@@ -52,11 +53,11 @@ export function makeServer({ environment = "development" } = {}) {
       this.post("/tasks/:taskId", updateNoteHandler.bind(this));
       this.delete("/tasks/:taskId", deleteNoteHandler.bind(this));
       this.post("/tasks/archives/:taskId", archiveNoteHandler.bind(this));
-
+      this.get("/tags", getTags.bind(this));
       // archive routes (private)
       this.get("/archives", getAllArchivedNotesHandler.bind(this));
       this.post(
-        "/archives/restore/:noteId",
+        "/archives/restore/:taskId",
         restoreFromArchivesHandler.bind(this)
       );
       this.delete(
