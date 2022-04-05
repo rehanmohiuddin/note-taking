@@ -31,7 +31,6 @@ export const createNoteHandler = function (schema, request) {
   try {
     const { task } = JSON.parse(request.requestBody);
     const tasks = getTasks() ? getTasks() : [];
-    console.log("create", { task });
     const createdTask = {
       ...task,
       _id: uuid(),
@@ -94,7 +93,6 @@ export const updateNoteHandler = function (schema, request) {
   try {
     const { task } = JSON.parse(request.requestBody);
     const { taskId } = request.params;
-    console.log({ task, taskId });
     let tasks = getTasks();
     const taskIndex = tasks.findIndex((task) => task._id === taskId);
     tasks[taskIndex] = { ...tasks[taskIndex], ...task };
@@ -138,7 +136,6 @@ export const archiveNoteHandler = function (schema, request) {
   try {
     const { task } = JSON.parse(request.requestBody);
     const { taskId } = request.params;
-    console.log({ task, taskId });
     let tasks = getTasks();
     const taskIndex = tasks.findIndex((task) => task._id === taskId);
     tasks[taskIndex] = { ...tasks[taskIndex], ...task, isArchived: true };
@@ -146,7 +143,7 @@ export const archiveNoteHandler = function (schema, request) {
     return new Response(
       200,
       {},
-      { tasks: tasks.filter((_task) => _task.isArchived) }
+      { tasks: tasks.filter((_task) => !_task.isArchived) }
     );
   } catch (error) {
     return new Response(

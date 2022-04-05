@@ -240,14 +240,14 @@ const taskReducer = (state = taskState, action) => {
       };
 
     case ARCHIVE_TASK_SUCCESS:
-      const _kanbanArchiveTasks = { ...kanban };
+      const _kanbanArchiveTasks = { ...kanbanInitial };
       const _resulArchivetKanban = data.tasks.reduce(
         tasksKanbanReducer,
         _kanbanArchiveTasks
       );
       return {
         ...state,
-        archivedTasks: [...data.tasks],
+        tasks: [...data.tasks],
         kanban: { ..._resulArchivetKanban },
         loading: false,
         openTaskModal: false,

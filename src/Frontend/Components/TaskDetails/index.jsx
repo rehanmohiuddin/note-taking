@@ -56,7 +56,7 @@ const Index = () => {
   };
   const close = () => {};
   return (
-    <Modal closeCallBack={() => console.log("close")}>
+    <Modal>
       <div className="section">
         <div className="section-header">Add Task</div>
         <div className="task-title-container">

@@ -71,7 +71,6 @@ const createTask = async (payload) => {
           data: resp.data,
         };
   } catch (e) {
-    console.log({ e });
     return {
       type: CREATE_TASK_FAILURE,
       data: e.toString(),
@@ -144,7 +143,6 @@ const getArchivedTasks = async () => {
 const deleteTask = async (payload) => {
   try {
     const { _id } = payload.task;
-    console.log({ _id });
     const resp = await AxiosInstance.delete("/tasks/" + _id, payload);
     return resp.status === 200
       ? {
@@ -167,7 +165,6 @@ const unArchiveTask = async (payload) => {
   try {
     const { _id } = payload.task;
     const resp = await AxiosInstance.post("/archives/restore/" + _id, payload);
-    console.log({ resp });
     return resp.status === 200
       ? {
           type: RESTORE_FROM_ARCHIVE_SUCCESS,

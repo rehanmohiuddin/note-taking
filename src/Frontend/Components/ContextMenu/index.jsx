@@ -1,17 +1,16 @@
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import useContextMenu from "../../hooks/useContextMenu";
 import "./index.css";
 
-const Index = ({ children }) => {
-  const { xPosition, yPosition, showMenu } = useContextMenu();
-
+const Index = ({ children, x, y, show }) => {
   return (
     <>
-      {showMenu && (
+      {show && (
         <div
           className="context-menu-container"
           style={{
-            top: yPosition,
-            left: xPosition,
+            top: y,
+            left: x,
           }}
         >
           {children}
