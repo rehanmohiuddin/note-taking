@@ -1,0 +1,6 @@
+.page-not-found-container {
+  display: flex;
+  justify-content: center;
+  padding: calc(4 * var(--spacing-unit));
+  flex-direction: column;
+}

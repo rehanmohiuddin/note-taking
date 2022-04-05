@@ -7,6 +7,7 @@ const Index = ({ children, x, y, show }) => {
     <>
       {show && (
         <div
+          id="test"
           className="context-menu-container"
           style={{
             top: y,

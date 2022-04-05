@@ -13,9 +13,15 @@ function useContextMenu() {
     setShowMenu(true);
   };
 
-  const handleClick = useCallback(() => {
-    showMenu && setShowMenu(false);
-  }, [showMenu]);
+  const noClickOnContainer = (e) =>
+    e.target.parentElement.className !== "context-menu-container";
+
+  const handleClick = useCallback(
+    (e) => {
+      showMenu && noClickOnContainer(e) && setShowMenu(false);
+    },
+    [showMenu]
+  );
 
   const closeMenu = () => {
     document.addEventListener("click", () => setShowMenu(null));
@@ -32,7 +38,7 @@ function useContextMenu() {
     };
   });
 
-  return { xPosition, yPosition, showMenu, ref };
+  return { xPosition, yPosition, showMenu, ref, noClickOnContainer };
 }
 
 export default useContextMenu;

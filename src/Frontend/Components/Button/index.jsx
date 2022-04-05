@@ -13,7 +13,9 @@ function Index({ data, type, style, callBack, navigate }) {
       {data}
     </div>
   ) : (
-    <Link to={navigate}>{data}</Link>
+    <Link className="btn-link" to={navigate}>
+      {data}
+    </Link>
   );
 }
 
