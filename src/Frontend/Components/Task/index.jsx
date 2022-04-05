@@ -28,10 +28,13 @@ function Index(task, index) {
     y: null,
     show: null,
   });
-  const { xPosition, yPosition, showMenu, ref } = useContextMenu();
+  const { xPosition, yPosition, showMenu, ref, noClickOnContainer } =
+    useContextMenu();
 
-  const handleOpenTask = () =>
-    dispatch({ type: GET_TASK_DETAIL, data: task.task });
+  const handleOpenTask = (e) => {
+    noClickOnContainer(e) &&
+      dispatch({ type: GET_TASK_DETAIL, data: task.task });
+  };
 
   const getPriority = {
     [PRIORITY_HIGH]: { style: "high", name: "HIGH" },
