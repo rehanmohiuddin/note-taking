@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import "./index.css";
 import Button from "../Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,13 +19,15 @@ import {
   TASK_MODAL_ACTION,
 } from "../../actions/task";
 import Filter from "../FilterSort";
-import { getTags, getTasks } from "../../services/task";
+import { getTags, getTasks, searchTask } from "../../services/task";
+import Search from "../Search";
 
 function Index() {
-  const { dispatch, selectedFilter, tags } = useTask();
+  const { dispatch, selectedFilter, tags, searchResults } = useTask();
   const [openFilter, setFilter] = useState(null);
   const [openSort, setSort] = useState(null);
   const [openTags, setTags] = useState(null);
+  const [query, setQuery] = useState("");
 
   useEffect(async () => dispatch({ ...(await getTags()) }), []);
 
@@ -51,6 +53,32 @@ function Index() {
 
   const handleClearFilter = async () => dispatch({ ...(await getTasks()) });
 
+  const debounce = (fn) => {
+    let timer;
+    return (query) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn(query);
+      }, 300);
+    };
+  };
+
+  const searchDispatch = async (query) => {
+    dispatch({ ...(await searchTask({ query: query })) });
+  };
+
+  const serachFn = useCallback((query) => {
+    searchDispatch(query);
+  }, []);
+
+  const searchDebounce = debounce(serachFn);
+
+  const memoizeHandleSearch = useCallback((e) => {
+    const query = e.target.value.toLowerCase();
+    setQuery(query);
+    searchDebounce(query);
+  }, []);
+
   return (
     <header className="home-header">
       <Button
@@ -63,7 +91,10 @@ function Index() {
           </>
         }
       />
-      <input className="search-tasks" placeholder="search tasks" />
+      <Search
+        handleSearch={memoizeHandleSearch}
+        searchResults={query.length > 0 ? searchResults : []}
+      />
       <div className="filter-sort-container">
         <div
           onClick={() => setFilter(!openFilter)}

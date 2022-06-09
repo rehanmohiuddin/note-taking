@@ -33,6 +33,7 @@ import {
   DELETE_TASK_SUCCESS,
   GET_TAGS_SUCCESS,
   FILTER_BY_TAGS,
+  SEARCH_TASKS_SUCCESS,
 } from "../actions/task";
 
 const tasksKanbanReducer = (kanban, task) => ({
@@ -295,6 +296,13 @@ const taskReducer = (state = taskState, action) => {
         kanban: { ..._filteredTagKanban },
         selectedFilter: data,
       };
+
+    case SEARCH_TASKS_SUCCESS:
+      return {
+        ...state,
+        searchResults: data.tasks,
+      };
+
     default:
       return { ...state };
   }

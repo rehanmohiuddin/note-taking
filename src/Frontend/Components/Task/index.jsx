@@ -12,28 +12,16 @@ import ContextMenu from "../ContextMenu";
 import { archiveTask, deleteTask, unArchiveTask } from "../../services/task";
 import useContextMenu from "../../hooks/useContextMenu";
 
-function Index(task, index) {
-  const {
-    title,
-    description,
-    created_at,
-    deadline,
-    priority,
-    isArchived,
-    _id,
-  } = task.task;
+function Index({ task, enableContext = true }) {
+  const { title, description, created_at, deadline, priority, isArchived } =
+    task;
   const { dispatch } = useTask();
-  const [contextMenuOptions, setContextMenuOptions] = useState({
-    x: null,
-    y: null,
-    show: null,
-  });
+
   const { xPosition, yPosition, showMenu, ref, noClickOnContainer } =
     useContextMenu();
 
   const handleOpenTask = (e) => {
-    noClickOnContainer(e) &&
-      dispatch({ type: GET_TASK_DETAIL, data: task.task });
+    noClickOnContainer(e) && dispatch({ type: GET_TASK_DETAIL, data: task });
   };
 
   const getPriority = {
@@ -75,13 +63,15 @@ function Index(task, index) {
         </div>
       </div>
 
-      <ContextMenu x={xPosition} y={yPosition} show={showMenu}>
-        {taskOptions.map((_task) => (
-          <div key={_task.name} onClick={_task.action}>
-            {_task.name}
-          </div>
-        ))}
-      </ContextMenu>
+      {enableContext && (
+        <ContextMenu x={xPosition} y={yPosition} show={showMenu}>
+          {taskOptions.map((_task) => (
+            <div key={_task.name} onClick={_task.action}>
+              {_task.name}
+            </div>
+          ))}
+        </ContextMenu>
+      )}
     </div>
   );
 }

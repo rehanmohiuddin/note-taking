@@ -26,6 +26,9 @@ const PRIORITY_HIGH = "PRIORITY_HIGH";
 const PRIORITY_LOW = "PRIORITY_LOW";
 const PRIORITY_MEDIUM = "PRIORITY_MEDIUM";
 
+const SEARCH_TASKS_SUCCESS = "SEARCH_TASKS_SUCCESS";
+const SEARCH_TASKS_FAILURE = "SEARCH_TASKS_FAILURE";
+
 //filter & sorts
 
 const FILTER_TODAY_DEADLINE = "FILTER_TODAY_DEADLINE";
@@ -57,6 +60,7 @@ const taskState = {
   taskDetail: null,
   selectedFilter: null,
   tags: [],
+  searchResults: [],
 };
 const kanbanInitial = { TODO: [], IN_PROGRESS: [], COMPLETED: [] };
 
@@ -103,4 +107,6 @@ export {
   GET_TAGS_FAILURE,
   GET_TAGS_SUCCESS,
   FILTER_BY_TAGS,
+  SEARCH_TASKS_FAILURE,
+  SEARCH_TASKS_SUCCESS,
 };

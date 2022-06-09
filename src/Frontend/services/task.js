@@ -15,6 +15,8 @@ import {
   UPDATE_TASK_SUCCESS,
   GET_TAGS_SUCCESS,
   GET_TAGS_FAILURE,
+  SEARCH_TASKS_SUCCESS,
+  SEARCH_TASKS_FAILURE,
 } from "../actions/task";
 import { AxiosInstance } from "../AxiosInstance";
 
@@ -182,6 +184,27 @@ const unArchiveTask = async (payload) => {
   }
 };
 
+const searchTask = async (payload) => {
+  try {
+    const { query } = payload;
+    const resp = await AxiosInstance.get("/search?taskQuery=" + query);
+    return resp.status === 200
+      ? {
+          type: SEARCH_TASKS_SUCCESS,
+          data: resp.data,
+        }
+      : {
+          type: SEARCH_TASKS_FAILURE,
+          data: resp.data,
+        };
+  } catch (e) {
+    return {
+      type: SEARCH_TASKS_FAILURE,
+      data: e.toString(),
+    };
+  }
+};
+
 export {
   getTasks,
   createTask,
@@ -191,4 +214,5 @@ export {
   deleteTask,
   unArchiveTask,
   getTags,
+  searchTask,
 };
