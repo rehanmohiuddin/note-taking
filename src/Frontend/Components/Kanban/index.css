@@ -17,6 +17,7 @@
 .kanban-body {
   padding: 1rem;
   overflow-y: scroll;
+  height: 70vh;
 }
 .kanban-body::-webkit-scrollbar {
   display: none;

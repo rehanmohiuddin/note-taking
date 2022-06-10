@@ -11,10 +11,18 @@ import {
 import ContextMenu from "../ContextMenu";
 import { archiveTask, deleteTask, unArchiveTask } from "../../services/task";
 import useContextMenu from "../../hooks/useContextMenu";
+import { Draggable } from "react-beautiful-dnd";
 
-function Index({ task, enableContext = true }) {
-  const { title, description, created_at, deadline, priority, isArchived } =
-    task;
+function Index({ task, enableContext = true, index }) {
+  const {
+    _id,
+    title,
+    description,
+    created_at,
+    deadline,
+    priority,
+    isArchived,
+  } = task;
   const { dispatch } = useTask();
 
   const { xPosition, yPosition, showMenu, ref, noClickOnContainer } =

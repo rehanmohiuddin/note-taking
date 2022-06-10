@@ -174,3 +174,19 @@ export const searchTasksHandler = function (schema, request) {
     );
   }
 };
+
+export const changeSection = function (schema, request) {
+  try {
+    const { tasks } = JSON.parse(request.requestBody);
+    setTasks(tasks);
+    return new Response(200, {}, { tasks: tasks });
+  } catch (error) {
+    return new Response(
+      500,
+      {},
+      {
+        error,
+      }
+    );
+  }
+};

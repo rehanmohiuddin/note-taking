@@ -10,6 +10,7 @@ import {
 } from "./backend/controllers/AuthController";
 import {
   archiveNoteHandler,
+  changeSection,
   createNoteHandler,
   deleteNoteHandler,
   getAllNotesHandler,
@@ -66,6 +67,7 @@ export function makeServer({ environment = "development" } = {}) {
         "/archives/delete/:noteId",
         deleteFromArchivesHandler.bind(this)
       );
+      this.post("/change/section", changeSection.bind(this));
     },
   });
   return server;
