@@ -38,8 +38,6 @@ function Index() {
     return _tasks;
   }, [kanban]);
 
-  console.log({ tasks });
-
   const onDragEnd = async (draggedElement, y) => {
     const { destination, draggableId, source, type } = draggedElement;
     if (source.droppableId !== destination.droppableId) {
