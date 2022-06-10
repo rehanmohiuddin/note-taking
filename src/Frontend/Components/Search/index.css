@@ -31,6 +31,7 @@ input:focus {
   overflow-y: scroll;
   height: 40vh;
   align-items: center;
+  z-index: 100;
 }
 
 .search-results .task {

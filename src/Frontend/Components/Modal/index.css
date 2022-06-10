@@ -10,3 +10,9 @@
   flex-flow: row wrap;
   width: 40%;
 }
+
+@media screen and (max-width: 500px) {
+  .kash-modal {
+    width: 95%;
+  }
+}

@@ -2,7 +2,12 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import "./index.css";
 import Button from "../Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faPlus, faSort } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faFilter,
+  faPlus,
+  faSort,
+} from "@fortawesome/free-solid-svg-icons";
 import { useTask } from "../../context/Task";
 import {
   FARTHEST_DEADLINE,
@@ -22,7 +27,7 @@ import Filter from "../FilterSort";
 import { getTags, getTasks, searchTask } from "../../services/task";
 import Search from "../Search";
 
-function Index() {
+function Index({ setNav }) {
   const { dispatch, selectedFilter, tags, searchResults } = useTask();
   const [openFilter, setFilter] = useState(null);
   const [openSort, setSort] = useState(null);
@@ -91,6 +96,9 @@ function Index() {
           </>
         }
       />
+      <div onClick={setNav} className="mobile-nav-btn">
+        <FontAwesomeIcon icon={faBars} />
+      </div>
       <Search
         handleSearch={memoizeHandleSearch}
         searchResults={query.length > 0 ? searchResults : []}

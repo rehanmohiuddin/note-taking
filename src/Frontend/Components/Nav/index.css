@@ -6,10 +6,9 @@
   padding: 1rem;
   height: 100vh;
   box-sizing: border-box;
-  width: 8%;
 }
 .nav-logo {
-  width: 60%;
+  width: 100%;
 }
 .nav-icon {
   padding: 1rem;
@@ -21,6 +20,7 @@
   flex-direction: column;
   margin-top: 1rem;
   align-items: center;
+  position: relative;
 }
 .nav-buttons > a {
   color: var(--black);
@@ -28,4 +28,19 @@
 
 .route-active {
   color: var(--teal);
+}
+
+.nav-buttons a:hover:after {
+  content: attr(data-name);
+  position: absolute;
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  background-color: var(--white);
+  padding: calc(var(--spacing-unit) * 0.5);
+  border: 1px solid var(--gray);
+}
+
+@media screen and (max-width: 500px) {
+  .nav-logo {
+    width: calc(var(--spacing-unit) * 2);
+  }
 }

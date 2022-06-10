@@ -7,3 +7,26 @@
 .main {
   flex: 1;
 }
+.mobile-side-nav {
+  display: none;
+  position: absolute;
+}
+.desktop-side-nav {
+  width: 5%;
+}
+
+@media screen and (max-width: 500px) {
+  .mobile-side-nav {
+    display: block;
+    z-index: 1000;
+    left: 0;
+    transition: left 1s;
+  }
+
+  .mobile-side-nav .home-nav-bar {
+    padding: calc(var(--spacing-unit) * 1);
+  }
+  .desktop-side-nav {
+    display: none;
+  }
+}

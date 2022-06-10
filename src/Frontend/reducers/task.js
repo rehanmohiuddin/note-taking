@@ -154,7 +154,10 @@ const taskReducer = (state = taskState, action) => {
     case CREATE_TASK_SUCCESS:
       const newKanban = {
         ...kanban,
-        [data.task.section]: [data.task, ...kanban[data.task.section]],
+        [data.task.section]: {
+          ...kanban[data.task.section],
+          tasks: [data.task, ...kanban[data.task.section].tasks],
+        },
       };
       return {
         ...state,

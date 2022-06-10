@@ -4,6 +4,8 @@
   color: var(--black);
   border-radius: 0.4rem;
   justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .filter-sort-container {
@@ -27,4 +29,21 @@
   padding: 0.4rem;
   color: var(--teal);
   cursor: pointer;
+}
+
+.home-header .mobile-nav-btn {
+  font-size: calc(var(--spacing-unit) * 2);
+}
+
+@media screen and (max-width: 500px) {
+  .home-header {
+    gap: calc(var(--spacing-unit) * 1);
+  }
+  .home-header .btn-outline {
+    width: 80%;
+  }
+  .home-header .search-container {
+    width: 100%;
+    align-items: center;
+  }
 }
