@@ -47,7 +47,10 @@ function Index({ task, enableContext = true, index }) {
     },
     {
       name: "Delete",
-      action: async () => dispatch({ ...(await deleteTask(task)) }),
+      action: async () => {
+        console.log("DELETE", task);
+        dispatch({ ...(await deleteTask(task)) });
+      },
     },
   ];
 

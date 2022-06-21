@@ -146,7 +146,7 @@ const getArchivedTasks = async () => {
 
 const deleteTask = async (payload) => {
   try {
-    const { _id } = payload.task;
+    const { _id } = payload;
     const resp = await AxiosInstance.delete("/tasks/" + _id, payload);
     return resp.status === 200
       ? {

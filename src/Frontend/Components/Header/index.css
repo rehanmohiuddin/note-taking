@@ -31,11 +31,18 @@
   cursor: pointer;
 }
 
+.mobile-nav-btn {
+  display: none;
+}
+
 .home-header .mobile-nav-btn {
   font-size: calc(var(--spacing-unit) * 2);
 }
 
 @media screen and (max-width: 500px) {
+  .mobile-nav-btn {
+    display: block;
+  }
   .home-header {
     gap: calc(var(--spacing-unit) * 1);
   }
