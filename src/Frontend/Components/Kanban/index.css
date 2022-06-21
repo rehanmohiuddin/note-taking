@@ -17,7 +17,14 @@
 .kanban-body {
   padding: 1rem;
   overflow-y: scroll;
+  height: 70vh;
 }
 .kanban-body::-webkit-scrollbar {
   display: none;
+}
+
+@media screen and (max-width: 500px) {
+  .kanban {
+    min-width: 90vw;
+  }
 }
