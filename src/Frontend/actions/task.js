@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 const GET_TASKS = "GET_TASKS";
 const GET_TASKS_SUCCESS = "GET_TASKS_SUCCESS";
 const GET_TASKS_FAILURE = "GET_TASKS_FAILURE";
@@ -19,12 +21,15 @@ const DELETE_TASK_FAILURE = "DELETE_TASK_FAILURE";
 const RESTORE_FROM_ARCHIVE_SUCCESS = "RESTORE_FROM_ARCHIVE_SUCCESS";
 const RESTORE_FROM_ARCHIVE_FAILURE = "RESTORE_FROM_ARCHIVE_FAILURE";
 const TODO = "TODO";
-const IN_PROGRESS = "IN_PROGRESS";
+const IN_PROGRESS = "IN PROGRESS";
 const COMPLETED = "COMPLETED";
 const GET_TASK_DETAIL = "GET_TASK_DETAIL";
 const PRIORITY_HIGH = "PRIORITY_HIGH";
 const PRIORITY_LOW = "PRIORITY_LOW";
 const PRIORITY_MEDIUM = "PRIORITY_MEDIUM";
+
+const SEARCH_TASKS_SUCCESS = "SEARCH_TASKS_SUCCESS";
+const SEARCH_TASKS_FAILURE = "SEARCH_TASKS_FAILURE";
 
 //filter & sorts
 
@@ -46,9 +51,18 @@ const FARTHEST_DEADLINE = "FARTHEST_DEADLINE";
 
 const FILTER_BY_TAGS = "FILTER_BY_TAGS";
 
+const DROP_SUCCESS = "DROP_SUCCESS";
+const DROP_FAILURE = "DROP_FAILURE";
+
+const kanbanInitial = {
+  [TODO]: { _id: uuid(), name: "TODO", tasks: [] },
+  [IN_PROGRESS]: { _id: uuid(), name: "IN PROGRESS", tasks: [] },
+  [COMPLETED]: { _id: uuid(), name: "COMPLETED", tasks: [] },
+};
+
 const taskState = {
   tasks: [],
-  kanban: { TODO: [], IN_PROGRESS: [], COMPLETED: [] },
+  kanban: { ...kanbanInitial },
   archivedTasks: [],
   openTaskModal: false,
   editTask: null,
@@ -57,8 +71,8 @@ const taskState = {
   taskDetail: null,
   selectedFilter: null,
   tags: [],
+  searchResults: [],
 };
-const kanbanInitial = { TODO: [], IN_PROGRESS: [], COMPLETED: [] };
 
 export {
   taskState,
@@ -103,4 +117,8 @@ export {
   GET_TAGS_FAILURE,
   GET_TAGS_SUCCESS,
   FILTER_BY_TAGS,
+  SEARCH_TASKS_FAILURE,
+  SEARCH_TASKS_SUCCESS,
+  DROP_SUCCESS,
+  DROP_FAILURE,
 };

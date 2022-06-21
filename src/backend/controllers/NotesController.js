@@ -155,3 +155,38 @@ export const archiveNoteHandler = function (schema, request) {
     );
   }
 };
+
+export const searchTasksHandler = function (schema, request) {
+  try {
+    const { taskQuery } = request.queryParams;
+    const tasks = getTasks();
+    const searchResults = tasks.filter(({ title }) =>
+      title.toLowerCase().includes(taskQuery)
+    );
+    return new Response(200, {}, { tasks: searchResults });
+  } catch (error) {
+    return new Response(
+      500,
+      {},
+      {
+        error,
+      }
+    );
+  }
+};
+
+export const changeSection = function (schema, request) {
+  try {
+    const { tasks } = JSON.parse(request.requestBody);
+    setTasks(tasks);
+    return new Response(200, {}, { tasks: tasks });
+  } catch (error) {
+    return new Response(
+      500,
+      {},
+      {
+        error,
+      }
+    );
+  }
+};

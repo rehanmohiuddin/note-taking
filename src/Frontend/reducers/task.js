@@ -33,11 +33,16 @@ import {
   DELETE_TASK_SUCCESS,
   GET_TAGS_SUCCESS,
   FILTER_BY_TAGS,
+  SEARCH_TASKS_SUCCESS,
+  DROP_SUCCESS,
 } from "../actions/task";
 
 const tasksKanbanReducer = (kanban, task) => ({
   ...kanban,
-  [task.section]: [...kanban[task.section], task],
+  [task.section]: {
+    ...kanban[task.section],
+    tasks: [...kanban[task.section].tasks, task],
+  },
 });
 
 const filterMapper = {
@@ -182,9 +187,9 @@ const taskReducer = (state = taskState, action) => {
 
     case FILTER:
       const _filteredTasks = filterMapper[data]([
-        ...kanban[TODO],
-        ...kanban[IN_PROGRESS],
-        ...kanban[COMPLETED],
+        ...kanban[TODO].tasks,
+        ...kanban[IN_PROGRESS].tasks,
+        ...kanban[COMPLETED].tasks,
       ]);
       const filteredKanBan = _filteredTasks.reduce(tasksKanbanReducer, {
         ...kanbanInitial,
@@ -197,9 +202,9 @@ const taskReducer = (state = taskState, action) => {
 
     case SORT:
       const _sortedTasks = sortMapper[data]([
-        ...kanban[TODO],
-        ...kanban[IN_PROGRESS],
-        ...kanban[COMPLETED],
+        ...kanban[TODO].tasks,
+        ...kanban[IN_PROGRESS].tasks,
+        ...kanban[COMPLETED].tasks,
       ]);
       const sortedKanBan = _sortedTasks.reduce(tasksKanbanReducer, {
         ...kanbanInitial,
@@ -295,6 +300,18 @@ const taskReducer = (state = taskState, action) => {
         kanban: { ..._filteredTagKanban },
         selectedFilter: data,
       };
+
+    case SEARCH_TASKS_SUCCESS:
+      return {
+        ...state,
+        searchResults: data.tasks,
+      };
+    case DROP_SUCCESS:
+      return {
+        ...state,
+        kanban: data,
+      };
+
     default:
       return { ...state };
   }

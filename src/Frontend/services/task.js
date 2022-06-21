@@ -15,6 +15,10 @@ import {
   UPDATE_TASK_SUCCESS,
   GET_TAGS_SUCCESS,
   GET_TAGS_FAILURE,
+  SEARCH_TASKS_SUCCESS,
+  SEARCH_TASKS_FAILURE,
+  DROP_SUCCESS,
+  DROP_FAILURE,
 } from "../actions/task";
 import { AxiosInstance } from "../AxiosInstance";
 
@@ -80,7 +84,7 @@ const createTask = async (payload) => {
 
 const archiveTask = async (payload) => {
   try {
-    const { _id } = payload.task;
+    const { _id } = payload;
     const resp = await AxiosInstance.post("/tasks/archives/" + _id, payload);
     return resp.status === 200
       ? {
@@ -163,7 +167,7 @@ const deleteTask = async (payload) => {
 
 const unArchiveTask = async (payload) => {
   try {
-    const { _id } = payload.task;
+    const { _id } = payload;
     const resp = await AxiosInstance.post("/archives/restore/" + _id, payload);
     return resp.status === 200
       ? {
@@ -182,6 +186,39 @@ const unArchiveTask = async (payload) => {
   }
 };
 
+const searchTask = async (payload) => {
+  try {
+    const { query } = payload;
+    const resp = await AxiosInstance.get("/search?taskQuery=" + query);
+    return resp.status === 200
+      ? {
+          type: SEARCH_TASKS_SUCCESS,
+          data: resp.data,
+        }
+      : {
+          type: SEARCH_TASKS_FAILURE,
+          data: resp.data,
+        };
+  } catch (e) {
+    return {
+      type: SEARCH_TASKS_FAILURE,
+      data: e.toString(),
+    };
+  }
+};
+
+const changeSection = async (payload) => {
+  try {
+    const { tasks } = payload;
+    const resp = await AxiosInstance.post("/change/section", { tasks: tasks });
+  } catch (e) {
+    return {
+      type: DROP_FAILURE,
+      data: e.toString(),
+    };
+  }
+};
+
 export {
   getTasks,
   createTask,
@@ -191,4 +228,6 @@ export {
   deleteTask,
   unArchiveTask,
   getTags,
+  searchTask,
+  changeSection,
 };

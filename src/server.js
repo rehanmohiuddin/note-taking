@@ -10,10 +10,12 @@ import {
 } from "./backend/controllers/AuthController";
 import {
   archiveNoteHandler,
+  changeSection,
   createNoteHandler,
   deleteNoteHandler,
   getAllNotesHandler,
   getTags,
+  searchTasksHandler,
   updateNoteHandler,
 } from "./backend/controllers/NotesController";
 import { users } from "./backend/db/users";
@@ -56,6 +58,7 @@ export function makeServer({ environment = "development" } = {}) {
       this.get("/tags", getTags.bind(this));
       // archive routes (private)
       this.get("/archives", getAllArchivedNotesHandler.bind(this));
+      this.get("/search", searchTasksHandler.bind(this));
       this.post(
         "/archives/restore/:taskId",
         restoreFromArchivesHandler.bind(this)
@@ -64,6 +67,7 @@ export function makeServer({ environment = "development" } = {}) {
         "/archives/delete/:noteId",
         deleteFromArchivesHandler.bind(this)
       );
+      this.post("/change/section", changeSection.bind(this));
     },
   });
   return server;
